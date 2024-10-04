@@ -14,14 +14,6 @@ export class TasksService {
     private tasksRepository: TasksRepository,
   ) {}
 
-  async getAllTasks(): Promise<Task[]> {
-    const found = await this.tasksRepository.find();
-    if (!found) {
-      throw new NotFoundException();
-    }
-    return found;
-  }
-
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     return await this.tasksRepository.createTask(createTaskDto);
   }
@@ -63,7 +55,7 @@ export class TasksService {
     return task;
   }
 
-  async getTasksWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
+  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
     return this.tasksRepository.getTasks(filterDto);
   }
 }

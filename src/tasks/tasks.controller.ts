@@ -22,10 +22,7 @@ export class TasksController {
 
   @Get()
   async getTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
-    if (Object.keys(filterDto)?.length) {
-      return await this.tasksService.getTasksWithFilters(filterDto);
-    }
-    return await this.tasksService.getAllTasks();
+    return await this.tasksService.getTasks(filterDto);
   }
 
   @Post()
