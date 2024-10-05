@@ -10,6 +10,7 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import { UNIQUE_CONSTRAINT_ERROR_CODE } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
     try {
       return await this.usersRepository.createUser(authCredentialsDto);
     } catch (error) {
-      if (error.code === '23505') {
+      if (error.code === UNIQUE_CONSTRAINT_ERROR_CODE) {
         throw new ConflictException('Username already exists');
       } else {
         throw new InternalServerErrorException();
