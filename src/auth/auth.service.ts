@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { UNIQUE_CONSTRAINT_ERROR_CODE } from './constants';
 import { SignUpDetailsDto } from './dto/signup-details.dto';
+import { SignInResponseDto } from './dto/signin-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,7 @@ export class AuthService {
 
   async signIn(
     authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<SignInResponseDto> {
     const { username, password } = authCredentialsDto;
 
     const user = await this.usersRepository.findOneBy({ username });
@@ -44,11 +45,14 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = {
         username,
-        firstName: user.firstName,
-        lastName: user.lastName,
       };
       const accessToken: string = await this.jwtService.sign(payload);
-      return { accessToken };
+      return {
+        username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        accessToken,
+      };
     } else {
       throw new UnauthorizedException('Please check your credentials');
     }
